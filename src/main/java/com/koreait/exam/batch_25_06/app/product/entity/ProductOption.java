@@ -1,4 +1,3 @@
-
 package com.koreait.exam.batch_25_06.app.product.entity;
 
 import com.koreait.exam.batch_25_06.app.entity.BaseEntity;
@@ -29,11 +28,18 @@ public class ProductOption extends BaseEntity {
 
 
     @ManyToOne(fetch = LAZY)
+    @ToString.Exclude
     private Product product;
 
     public ProductOption(String color, String size) {
         this.color = color;
         this.size = size;
+    }
+
+    public boolean isOrderable(int quantity) {
+        if(isSoldOut() == false) return true;
+
+        return getStockQuantity() >= quantity;
     }
 
 }
