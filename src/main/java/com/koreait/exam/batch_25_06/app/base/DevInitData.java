@@ -28,7 +28,18 @@ public class DevInitData {
             Member member3 = memberService.join("user3", password, "user3@test.com");
             Member member4 = memberService.join("user4", password, "user4@test.com");
 
-            Product product1 = productService.create("반팔 1", 55000, "DDM-1",
+            // 1만원 충전
+            memberService.addCash(member1, 10_000, "충전_무통장입금");
+            // 2만원 충전
+            memberService.addCash(member1, 20_000, "충전_무통장입금");
+            // 5천원 사용
+            memberService.addCash(member1, -5_000, "출금_일반");
+
+            long reshCash = memberService.getRestCash(member1);
+
+            System.out.println("member1 rest cash: " + reshCash);
+
+            Product product1 = productService.create("반팔 1", 55000, 45000, "DDM-1",
                     Arrays.asList(
                             new ProductOption("RED", "95"),
                             new ProductOption("RED", "100"),
@@ -36,7 +47,7 @@ public class DevInitData {
                             new ProductOption("BLUE", "100")
                     )
             );
-            Product product2 = productService.create("셔츠 1", 66000, "DDM-2",
+            Product product2 = productService.create("셔츠 1", 66000, 55000, "DDM-2",
                     Arrays.asList(
                             new ProductOption("WHITE", "95"),
                             new ProductOption("WHITE", "100"),
@@ -47,10 +58,14 @@ public class DevInitData {
 
             ProductOption productOption__RED_95 = product1.getProductOptions().get(0);
             ProductOption productOption__BLUE_95 = product1.getProductOptions().get(2);
+            ProductOption productOption__BLUE_100 = product1.getProductOptions().get(2);
 
             cartService.addItem(member1, productOption__RED_95, 1); // 회원1이 productOption__RED_95 1개 추가 / 총 수량 : 1
             cartService.addItem(member1, productOption__RED_95, 2); // 회원1이 productOption__RED_95 2개 추가 / 총 수량 : 3
             cartService.addItem(member1, productOption__BLUE_95, 1); // 회원1이 productOption__BLUE_95 1개 추가 / 총 수량 : 1
+
+
+            cartService.addItem(member2, productOption__BLUE_100, 1); // 회원2이 productOption__BLUE_100 1개 추가 / 총 수량 : 1
 
             orderService.createFromCart(member1);
 
